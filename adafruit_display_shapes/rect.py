@@ -3,6 +3,8 @@ import displayio
 class Rect(displayio.TileGrid):
     def __init__(self, x, y, width, height, *, fill=None, outline=None):
         self._bitmap = displayio.Bitmap(width, height, 2)
+        self._palette = displayio.Palette(2)
+
         if outline is not None:
             for w in range(width):
                 self._bitmap[w, 0] = 1
@@ -10,12 +12,12 @@ class Rect(displayio.TileGrid):
             for h in range(height):
                 self._bitmap[0, h] = 1
                 self._bitmap[width-1, h] = 1
-
-        self._palette = displayio.Palette(2)
-        self._palette[0] = fill
-        self._palette[1] = outline
+            self._palette[1] = outline
+        if fill is not None:
+            self._palette[0] = fill
+        else:
+            self._palette.make_transparent(0)
         super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
-
 
     @property
     def x(self):
