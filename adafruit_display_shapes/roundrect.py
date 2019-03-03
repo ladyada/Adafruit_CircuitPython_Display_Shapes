@@ -6,16 +6,15 @@ class RoundRect(displayio.TileGrid):
         self._palette = displayio.Palette(3)
         self._palette.make_transparent(0)
 
-        """
         if fill is not None:
-            #for i in range(x0-r, x0+r):   # draw the center line
-            #    self._bitmap[i, r] = 2
-            # ask our helper to fill in the circle
-            self._helper(x0, y0, r, 0xF, 2, fill=True)
+            for i in range(0, width):   # draw the center chunk
+                for j in range(r, height-r):   # draw the center chunk
+                    self._bitmap[i, j] = 2
+            self._helper(r, r, r, color=2, fill=True,
+                         x_offset=width-2*r-1, y_offset=height-2*r-1)
             self._palette[2] = fill
         else:
             self._palette.make_transparent(2)
-        """
 
         if outline is not None:
             self._palette[1] = outline
@@ -27,11 +26,11 @@ class RoundRect(displayio.TileGrid):
                 self._bitmap[0, h] = 1
                 self._bitmap[width-1, h] = 1
             # draw round corners
-            self._helper(r, r, r, x_offset=width-2*r-1, y_offset=height-2*r-1, cornerflags=0xF)
+            self._helper(r, r, r, color=1, x_offset=width-2*r-1, y_offset=height-2*r-1)
 
         super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
 
-    def _helper(self, x0, y0, r, *, x_offset=0, y_offset=0, cornerflags=0xF, color=1, fill=False):
+    def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0, cornerflags=0xF, fill=False):
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
@@ -48,18 +47,18 @@ class RoundRect(displayio.TileGrid):
             f += ddF_x
             if cornerflags & 0x8:
                 if fill:
-                    for w in range(x0-y, x0+y):
-                        self._bitmap[w, y0+x] = color
-                    for w in range(x0-x, x0+x):
-                        self._bitmap[w, y0+y] = color
+                    for w in range(x0-y, x0+y+x_offset):
+                        self._bitmap[w, y0+x+y_offset] = color
+                    for w in range(x0-x, x0+x+x_offset):
+                        self._bitmap[w, y0+y+y_offset] = color
                 else:
                     self._bitmap[x0-y, y0+x+y_offset] = color
                     self._bitmap[x0-x, y0+y+y_offset] = color
             if cornerflags & 0x1:
                 if fill:
-                    for w in range(x0-y, x0+y):
+                    for w in range(x0-y, x0+y+x_offset):
                         self._bitmap[w, y0-x] = color
-                    for w in range(x0-x, x0+x):
+                    for w in range(x0-x, x0+x+x_offset):
                         self._bitmap[w, y0-y] = color
                 else:
                     self._bitmap[x0-y, y0-x] = color
