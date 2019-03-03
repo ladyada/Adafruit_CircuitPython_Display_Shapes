@@ -1,7 +1,7 @@
 import displayio
 
 class RoundRect(displayio.TileGrid):
-    def __init__(self, x, y, width, height, r, *, fill=None, outline=None):
+    def __init__(self, x, y, width, height, r, *, fill=None, outline=None, stroke=1):
         self._bitmap = displayio.Bitmap(width, height, 3)
         self._palette = displayio.Palette(3)
         self._palette.make_transparent(0)
@@ -20,17 +20,19 @@ class RoundRect(displayio.TileGrid):
             self._palette[1] = outline
             # draw flat sides
             for w in range(r, width-r):
-                self._bitmap[w, 0] = 1
-                self._bitmap[w, height-1] = 1
+                for line in range(stroke):
+                    self._bitmap[w, line] = 1
+                    self._bitmap[w, height-line-1] = 1
             for h in range(r, height-r):
-                self._bitmap[0, h] = 1
-                self._bitmap[width-1, h] = 1
+                for line in range(stroke):
+                    self._bitmap[line, h] = 1
+                    self._bitmap[width-line-1, h] = 1
             # draw round corners
-            self._helper(r, r, r, color=1, x_offset=width-2*r-1, y_offset=height-2*r-1)
+            self._helper(r, r, r, color=1, stroke=stroke, x_offset=width-2*r-1, y_offset=height-2*r-1)
 
         super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
 
-    def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0, cornerflags=0xF, fill=False):
+    def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0, stroke=1, cornerflags=0xF, fill=False):
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
@@ -52,8 +54,9 @@ class RoundRect(displayio.TileGrid):
                     for w in range(x0-x, x0+x+x_offset):
                         self._bitmap[w, y0+y+y_offset] = color
                 else:
-                    self._bitmap[x0-y, y0+x+y_offset] = color
-                    self._bitmap[x0-x, y0+y+y_offset] = color
+                    for line in range(stroke):
+                        self._bitmap[x0-y+line, y0+x+y_offset] = color
+                        self._bitmap[x0-x, y0+y+y_offset-line] = color
             if cornerflags & 0x1:
                 if fill:
                     for w in range(x0-y, x0+y+x_offset):
@@ -61,14 +64,17 @@ class RoundRect(displayio.TileGrid):
                     for w in range(x0-x, x0+x+x_offset):
                         self._bitmap[w, y0-y] = color
                 else:
-                    self._bitmap[x0-y, y0-x] = color
-                    self._bitmap[x0-x, y0-y] = color
+                    for line in range(stroke):
+                        self._bitmap[x0-y+line, y0-x] = color
+                        self._bitmap[x0-x, y0-y+line] = color
             if cornerflags & 0x4:
-                self._bitmap[x0+x+x_offset, y0+y+y_offset] = color
-                self._bitmap[x0+y+x_offset, y0+x+y_offset] = color
+                for line in range(stroke):
+                    self._bitmap[x0+x+x_offset, y0+y+y_offset-line] = color
+                    self._bitmap[x0+y+x_offset-line, y0+x+y_offset] = color
             if cornerflags & 0x2:
-                self._bitmap[x0+x+x_offset, y0-y] = color
-                self._bitmap[x0+y+x_offset, y0-x] = color
+                for line in range(stroke):
+                    self._bitmap[x0+x+x_offset, y0-y+line] = color
+                    self._bitmap[x0+y+x_offset-line, y0-x] = color
 
     @property
     def x(self):
