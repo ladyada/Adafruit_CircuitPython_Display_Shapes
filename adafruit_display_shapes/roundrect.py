@@ -50,10 +50,11 @@ class RoundRect(displayio.TileGrid):
     not change outer bound size set by width and height. Fill can be a hex value
     for the color or None for transparent. Outline can be a hex value for the color
     or None for no outline."""
-    def __init__(self, x, y, width, height, r, *, fill=None, outline=None, stroke=1):
+    def __init__(self, x, y, width, height, r, *, fill=None, outline=None, stroke=1): # pylint: disable=too-many-arguments
         self._bitmap = displayio.Bitmap(width, height, 3)
         self._palette = displayio.Palette(3)
         self._palette.make_transparent(0)
+        self.position = None # this is reset by the super().init
 
         if fill is not None:
             for i in range(0, width):   # draw the center chunk
@@ -72,16 +73,18 @@ class RoundRect(displayio.TileGrid):
                 for line in range(stroke):
                     self._bitmap[w, line] = 1
                     self._bitmap[w, height-line-1] = 1
-            for h in range(r, height-r):
+            for _h in range(r, height-r):
                 for line in range(stroke):
-                    self._bitmap[line, h] = 1
-                    self._bitmap[width-line-1, h] = 1
+                    self._bitmap[line, _h] = 1
+                    self._bitmap[width-line-1, _h] = 1
             # draw round corners
             self._helper(r, r, r, color=1, stroke=stroke,
                          x_offset=width-2*r-1, y_offset=height-2*r-1)
 
         super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
 
+
+    # pylint: disable=invalid-name, too-many-locals, too-many-branches
     def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0,
                 stroke=1, cornerflags=0xF, fill=False):
         f = 1 - r
@@ -126,6 +129,7 @@ class RoundRect(displayio.TileGrid):
                 for line in range(stroke):
                     self._bitmap[x0+x+x_offset, y0-y+line] = color
                     self._bitmap[x0+y+x_offset-line, y0-x] = color
+    # pylint: enable=invalid-name, too-many-locals, too-many-branches
 
     @property
     def x(self):
@@ -141,6 +145,6 @@ class RoundRect(displayio.TileGrid):
         """The y coordinate of the position"""
         return self.position[1]
 
-    @x.setter
+    @y.setter
     def y(self, y):
         self.position = (self.position[0], y)
