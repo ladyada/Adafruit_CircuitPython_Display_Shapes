@@ -72,6 +72,28 @@ class Rect(displayio.TileGrid):
         super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
 
     @property
+    def fill(self):
+        return self._palette[0]
+
+    @fill.setter
+    def fill(self, color):
+        if color is None:
+            self._palette.make_transparent(0)
+        else:
+            self._palette[0] = color
+
+    @property
+    def outline(self):
+        return self._palette[1]
+
+    @outline.setter
+    def outline(self, color):
+        if color is None:
+            self._palette.make_transparent(1)
+        else:
+            self._palette[1] = color
+
+    @property
     def x(self):
         """The x coordinate of the position"""
         return self.position[0]

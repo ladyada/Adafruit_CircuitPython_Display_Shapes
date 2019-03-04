@@ -131,6 +131,29 @@ class RoundRect(displayio.TileGrid):
     # pylint: enable=invalid-name, too-many-locals, too-many-branches
 
     @property
+    def fill(self):
+        return self._palette[2]
+
+    @fill.setter
+    def fill(self, color):
+        if color is None:
+            self._palette.make_transparent(2)
+        else:
+            self._palette[2] = color
+
+    @property
+    def outline(self):
+        return self._palette[1]
+
+    @outline.setter
+    def outline(self, color):
+        if color is None:
+            self._palette.make_transparent(1)
+        else:
+            self._palette[1] = color
+
+
+    @property
     def x(self):
         """The x coordinate of the position"""
         return self.position[0]
