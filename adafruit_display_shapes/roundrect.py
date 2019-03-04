@@ -1,6 +1,55 @@
+# The MIT License (MIT)
+#
+# Copyright (c) 2019 Limor Fried for Adafruit Industries
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+"""
+`rect`
+================================================================================
+
+Various common shapes for use with displayio - Rectangle shape!
+
+
+* Author(s): Limor Fried
+
+Implementation Notes
+--------------------
+
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the supported boards:
+  https://github.com/adafruit/circuitpython/releases
+
+"""
+
 import displayio
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Display_Shapes.git"
+
+
 class RoundRect(displayio.TileGrid):
+    """A round-corner rectangle, top left corner is (x, y) and size of width, height.
+    r is the radius of the rounded corner. Stroke is used for the outline, and will
+    not change outer bound size set by width and height. Fill can be a hex value
+    for the color or None for transparent. Outline can be a hex value for the color
+    or None for no outline."""
     def __init__(self, x, y, width, height, r, *, fill=None, outline=None, stroke=1):
         self._bitmap = displayio.Bitmap(width, height, 3)
         self._palette = displayio.Palette(3)
@@ -28,11 +77,13 @@ class RoundRect(displayio.TileGrid):
                     self._bitmap[line, h] = 1
                     self._bitmap[width-line-1, h] = 1
             # draw round corners
-            self._helper(r, r, r, color=1, stroke=stroke, x_offset=width-2*r-1, y_offset=height-2*r-1)
+            self._helper(r, r, r, color=1, stroke=stroke,
+                         x_offset=width-2*r-1, y_offset=height-2*r-1)
 
         super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
 
-    def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0, stroke=1, cornerflags=0xF, fill=False):
+    def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0,
+                stroke=1, cornerflags=0xF, fill=False):
         f = 1 - r
         ddF_x = 1
         ddF_y = -2 * r
@@ -78,6 +129,7 @@ class RoundRect(displayio.TileGrid):
 
     @property
     def x(self):
+        """The x coordinate of the position"""
         return self.position[0]
 
     @x.setter
@@ -86,6 +138,7 @@ class RoundRect(displayio.TileGrid):
 
     @property
     def y(self):
+        """The y coordinate of the position"""
         return self.position[1]
 
     @x.setter
