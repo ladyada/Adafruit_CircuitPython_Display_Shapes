@@ -51,10 +51,9 @@ class RoundRect(displayio.TileGrid):
     for the color or None for transparent. Outline can be a hex value for the color
     or None for no outline."""
     def __init__(self, x, y, width, height, r, *, fill=None, outline=None, stroke=1): # pylint: disable=too-many-arguments
-        self._bitmap = displayio.Bitmap(width, height, 3)
         self._palette = displayio.Palette(3)
         self._palette.make_transparent(0)
-        self.position = None # this is reset by the super().init
+        self._bitmap = displayio.Bitmap(width, height, 3)
 
         if fill is not None:
             for i in range(0, width):   # draw the center chunk
