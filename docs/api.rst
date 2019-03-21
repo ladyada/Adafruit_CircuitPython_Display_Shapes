@@ -4,5 +4,11 @@
 .. If your library file(s) are nested in a directory (e.g. /adafruit_foo/foo.py)
 .. use this format as the module name: "adafruit_foo.foo"
 
-.. automodule:: adafruit_display_shapes
+.. automodule:: adafruit_display_shapes.circle
    :members:
+
+.. automodule:: adafruit_display_shapes.rect
+  :members:
+
+.. automodule:: adafruit_display_shapes.roundrect
+  :members:

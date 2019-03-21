@@ -45,12 +45,21 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Display_Shapes.gi
 
 
 class Rect(displayio.TileGrid):
-    """A rectangle, top left corner is (x, y) and size of width, height.
-    Stroke is used for the outline, and will not change outer bound size set
-    by width and height. Fill can be a hex value for the color or None for
-    transparent. Outline can be a hex value for the color or None for no
-    outline."""
-    def __init__(self, x, y, width, height, *, stroke=1, fill=None, outline=None):
+    """A rectangle.
+
+    :param x: The x-position of the top left corner.
+    :param y: The y-position of the top left corner.
+    :param width: The width of the rectangle.
+    :param height: The height of the rectangle.
+    :param fill: The color to fill the rectangle. Can be a hex value for a color or
+                 ``None`` for transparent.
+    :param outline: The outline of the rectangle. Can be a hex value for a color or
+                    ``None`` for no outline.
+    :param stroke: Used for the outline. Will not change the outer bound size set by ``width`` and
+                   ``height``.
+
+    """
+    def __init__(self, x, y, width, height, *, fill=None, outline=None, stroke=1):
         self._bitmap = displayio.Bitmap(width, height, 2)
         self._palette = displayio.Palette(2)
 
@@ -73,6 +82,8 @@ class Rect(displayio.TileGrid):
 
     @property
     def fill(self):
+        """The fill of the rectangle. Can be a hex value for a color or ``None`` for
+        transparent."""
         return self._palette[0]
 
     @fill.setter
@@ -84,6 +95,8 @@ class Rect(displayio.TileGrid):
 
     @property
     def outline(self):
+        """The outline of the rectangle. Can be a hex value for a color or ``None``
+        for no outline."""
         return self._palette[1]
 
     @outline.setter
@@ -100,6 +113,7 @@ class Rect(displayio.TileGrid):
 
     @x.setter
     def x(self, x):
+        # pylint: disable=attribute-defined-outside-init
         self.position = (x, self.position[1])
 
     @property
@@ -109,4 +123,5 @@ class Rect(displayio.TileGrid):
 
     @y.setter
     def y(self, y):
+        # pylint: disable=attribute-defined-outside-init
         self.position = (self.position[0], y)
