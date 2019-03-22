@@ -45,8 +45,16 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Display_Shapes.gi
 
 
 class Circle(RoundRect):
-    """A circle, centered around (x0, y0) with radius r. Fill can be a hex
-    value for the color or None for transparent. Outline can be a hex value
-    for the color or None for no outline."""
+    """A circle.
+
+    :param x0: The x-position of the center.
+    :param y0: The y-position of the center..
+    :param r: The radius of the circle.
+    :param fill: The color to fill the rounded-corner rectangle. Can be a hex value for a color or
+                 ``None`` for transparent.
+    :param outline: The outline of the rounded-corner rectangle. Can be a hex value for a color or
+                    ``None`` for no outline.
+
+    """
     def __init__(self, x0, y0, r, *, fill=None, outline=None):
         super().__init__(x0-r, y0-r, 2*r+1, 2*r+1, r, fill=fill, outline=outline)
