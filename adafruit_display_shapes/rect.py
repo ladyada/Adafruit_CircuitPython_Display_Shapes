@@ -78,7 +78,7 @@ class Rect(displayio.TileGrid):
             self._palette[0] = fill
         else:
             self._palette.make_transparent(0)
-        super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
+        super().__init__(self._bitmap, pixel_shader=self._palette, x=x, y=y)
 
     @property
     def fill(self):
@@ -105,23 +105,3 @@ class Rect(displayio.TileGrid):
             self._palette.make_transparent(1)
         else:
             self._palette[1] = color
-
-    @property
-    def x(self):
-        """The x coordinate of the position"""
-        return self.position[0]
-
-    @x.setter
-    def x(self, x):
-        # pylint: disable=attribute-defined-outside-init
-        self.position = (x, self.position[1])
-
-    @property
-    def y(self):
-        """The y coordinate of the position"""
-        return self.position[1]
-
-    @y.setter
-    def y(self, y):
-        # pylint: disable=attribute-defined-outside-init
-        self.position = (self.position[0], y)

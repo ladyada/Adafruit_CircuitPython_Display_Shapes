@@ -12,10 +12,8 @@ board.DISPLAY.show(splash)
 color_bitmap = displayio.Bitmap(320, 240, 1)
 color_palette = displayio.Palette(1)
 color_palette[0] = 0xFFFFFF
-bg_sprite = displayio.TileGrid(color_bitmap,
-                               pixel_shader=color_palette,
-                               position=(0, 0))
-print(bg_sprite.position)
+bg_sprite = displayio.TileGrid(color_bitmap, x=0, y=0,
+                               pixel_shader=color_palette)
 splash.append(bg_sprite)
 ##########################################################################
 
