@@ -90,7 +90,7 @@ class RoundRect(displayio.TileGrid):
             # draw round corners
             self._helper(r, r, r, color=1, stroke=stroke,
                          x_offset=width-2*r-1, y_offset=height-2*r-1)
-        super().__init__(self._bitmap, pixel_shader=self._palette, position=(x, y))
+        super().__init__(self._bitmap, pixel_shader=self._palette, x=x, y=y)
 
     # pylint: disable=invalid-name, too-many-locals, too-many-branches
     def _helper(self, x0, y0, r, *, color, x_offset=0, y_offset=0,
@@ -164,24 +164,3 @@ class RoundRect(displayio.TileGrid):
             self._palette.make_transparent(1)
         else:
             self._palette[1] = color
-
-
-    @property
-    def x(self):
-        """The x coordinate of the position"""
-        return self.position[0]
-
-    @x.setter
-    def x(self, x):
-        # pylint: disable=attribute-defined-outside-init
-        self.position = (x, self.position[1])
-
-    @property
-    def y(self):
-        """The y coordinate of the position"""
-        return self.position[1]
-
-    @y.setter
-    def y(self, y):
-        # pylint: disable=attribute-defined-outside-init
-        self.position = (self.position[0], y)
